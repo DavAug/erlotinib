@@ -22,11 +22,17 @@ class TestModel(unittest.TestCase):
         path = erlo.ModelLibrary().tumour_growth_inhibition_model_koch()
         cls.model = erlo.MechanisticModel(path)
 
+        with open (path, "rb") as f:
+            sbml_str = f.read()
+            cls.model_from_str = erlo.MechanisticModel(sbml_str)
+
     def test_n_outputs(self):
         self.assertEqual(self.model.n_outputs(), 1)
+        self.assertEqual(self.model_from_str.n_outputs(), 1)
 
     def test_n_parameters(self):
         self.assertEqual(self.model.n_parameters(), 5)
+        self.assertEqual(self.model_from_str.n_parameters(), 5)
 
     def test_outputs(self):
         outputs = self.model.outputs()

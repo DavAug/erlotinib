@@ -18,15 +18,20 @@ class MechanisticModel(object):
 
     Parameters
     ----------
-    sbml_file
-        A path to the SBML model file that specifies the model.
+    sbml
+        A path to the SBML model file, or a byte string
+        in SBML format that specifies the model.
 
     """
 
-    def __init__(self, sbml_file):
+    def __init__(self, sbml_input):
         super(MechanisticModel, self).__init__()
 
-        model = sbml.SBMLImporter().model(sbml_file)
+        if isinstance(sbml_input, bytes):
+            model = sbml.SBMLParser().parse_string(sbml_input).myokit_model()
+        elif isinstance(sbml_input, str):
+            model = sbml.SBMLImporter().model(sbml_input)
+
 
         # Set default number and names of states, parameters and outputs.
         self._set_number_and_names(model)
